@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dptolibre - Onboarding App</title>
+    <style>
+        :root {
+            /* Paleta dptolibre (Psicología del Alivio) */
+            --primary-blue: #0056fb; /* Azul moderno inspirado en referentes PropTech */
+            --success-green: #22c55e; /* Verde de paz mental y escudo verde */
+            --bg-color: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --card-bg: #ffffff;
+            --border-light: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Simulación de dispositivo móvil */
+        .mobile-container {
+            width: 375px;
+            height: 812px;
+            background-color: var(--bg-color);
+            border-radius: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            position: relative;
+            border: 8px solid #0f172a;
+        }
+
+        .screen {
+            padding: 40px 24px;
+            height: 100%;
+            box-sizing: border-box;
+            display: none;
+            flex-direction: column;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* Cabecera y Logos */
+        .logo-container {
+            text-align: center;
+            margin-bottom: 35px;
+            margin-top: 15px;
+        }
+
+        .logo-container h1 {
+            color: var(--primary-blue);
+            font-size: 32px;
+            margin: 0;
+            letter-spacing: -1px;
+            font-weight: 800;
+        }
+
+        .logo-container p {
+            color: var(--success-green);
+            font-size: 14px;
+            margin: 5px 0 0 0;
+            font-weight: 600;
+        }
+
+        h2 {
+            color: var(--text-main);
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 15px;
+            line-height: 1.4;
+            margin-bottom: 30px;
+        }
+
+        /* Formularios y Botones */
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            box-sizing: border-box;
+            font-size: 16px;
+            background-color: var(--card-bg);
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 12px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 86, 251, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: #0046d1;
+        }
+
+        .btn-success {
+            background-color: var(--success-green);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(34, 197, 94, 0.2);
+        }
+
+        .btn-outline {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-light);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 20px 0;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .divider:not(:empty)::before { margin-right: .5em; }
+        .divider:not(:empty)::after { margin-left: .5em; }
+
+        /* Selector de Perfil - Tarjetas dptolibre */
+        .profile-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .profile-card:hover, .profile-card:active {
+            border-color: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 86, 251, 0.1);
+        }
+
+        .profile-icon {
+            font-size: 26px;
+            margin-right: 16px;
+            background: #eff6ff;
+            padding: 12px;
+            border-radius: 12px;
+            color: var(--primary-blue);
+        }
+
+        .profile-text h3 {
+            margin: 0 0 4px 0;
+            font-size: 16px;
+            color: var(--text-main);
+        }
+
+        .profile-text p {
+            margin: 0;
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.3;
+        }
+
+        /* KYC / Infoexperto-ID (Transición al Alivio) */
+        .kyc-box {
+            background-color: var(--card-bg);
+            border: 2px dashed #cbd5e1;
+            border-radius: 16px;
+            padding: 24px 20px;
+            text-align: center;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* Aplicación del Escudo Verde / Psicología del alivio */
+        .kyc-box.success {
+            border: 2px solid var(--success-green);
+            background-color: #f0fdf4;
+            color: #15803d;
+            transform: scale(1.02);
+        }
+
+        .kyc-box.success p {
+            color: #166534;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-container">
+        
+        <!-- PANTALLA 1: ACCESO (dptolibre) -->
+        <div id="screen1" class="screen active">
+            <div class="logo-container">
+                <h1>dptolibre</h1>
+                <p>Sin complicaciones. Sin fiador.</p>
+            </div>
+
+            <h2>Bienvenido</h2>
+            <p class="subtitle">Ingresa para gestionar tu alquiler con total libertad.</p>
+
+            <div class="input-group">
+                <input type="email" placeholder="Correo electrónico" required>
+            </div>
+            <div class="input-group">
+                <input type="password" placeholder="Contraseña" required>
+            </div>
+
+            <button class="btn btn-primary" onclick="nextScreen('screen2')">Entrar</button>
+
+            <div class="divider">ou entre com</div>
+
+            <button class="btn btn-outline">
+                🍎 Apple
+            </button>
+            <button class="btn btn-outline">
+                🇬 Google
+            </button>
+        </div>
+
+        <!-- PANTALLA 2: SELECTOR DE PERFIL (Fricción Cero) -->
+        <div id="screen2" class="screen">
+            <div class="logo-container" style="margin-bottom: 25px; text-align: left;">
+                <h1 style="font-size: 24px;">dptolibre</h1>
+            </div>
+
+            <h2>¿Qué buscas hoy?</h2>
+            <p class="subtitle">Elige cómo quieres operar en la plataforma.</p>
+
+            <div class="profile-card" onclick="nextScreen('screen3')">
+                <div class="profile-icon">🔑</div>
+                <div class="profile-text">
+                    <h3>Soy Inquilino</h3>
+                    <p>Usa tu reputación como aval. Alquila tu nuevo hogar hoy mismo.</p>
+                </div>
+            </div>
+
+            <div class="profile-card" onclick="nextScreen('screen3')">
+                <div class="profile-icon">🛡️</div>
+                <div class="profile-text">
+                    <h3>Soy Propietario</h3>
+                    <p>Tu patrimonio 100% resguardado con nuestro Escudo Verde.</p>
+                </div>
+            </div>
+
+            <div class="profile-card" onclick="nextScreen('screen3')">
+                <div class="profile-icon">🏢</div>
+                <div class="profile-text">
+                    <h3>Soy Administrador</h3>
+                    <p>Orquesta cobros, contratos y liquidaciones automáticamente.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANTALLA 3: IDENTIDAD (Infoexperto + Empoderamiento) -->
+        <div id="screen3" class="screen">
+            <div style="text-align: center; margin-bottom: 15px;">
+                <span style="font-size: 45px;">🆔</span>
+            </div>
+            <h2 style="text-align: center;">Tu reputación es tu aval</h2>
+            <p class="subtitle" style="text-align: center;">Valida tu identidad en segundos para asegurar tu cuenta en dptolibre.</p>
+
+            <div class="kyc-box" id="dni-box" onclick="simulateKYC(this)">
+                <div style="font-size: 30px; margin-bottom: 10px;">🪪</div>
+                <h3 style="margin: 0; font-size: 16px;">Escanear Documento</h3>
+                <p style="margin: 5px 0 0 0; font-size: 13px; color: var(--text-muted);">Frente y dorso de tu DNI</p>
+            </div>
+
+            <div class="kyc-box" id="selfie-box" onclick="simulateKYC(this)">
+                <div style="font-size: 30px; margin-bottom: 10px;">🤳</div>
+                <h3 style="margin: 0; font-size: 16px;">Prueba de Vida</h3>
+                <p style="margin: 5px 0 0 0; font-size: 13px; color: var(--text-muted);">Una selfie rápida de seguridad</p>
+            </div>
+
+            <button id="btn-final" class="btn btn-primary" style="margin-top: auto; opacity: 0.5; pointer-events: none;" onclick="alert('¡Validación exitosa! Tu escudo verde está activo.')">Confirmar Identidad</button>
+        </div>
+
+    </div>
+
+    <script>
+        let validations = 0;
+
+        function nextScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function simulateKYC(element) {
+            if(!element.classList.contains('success')) {
+                // Psicología del alivio: Transición a Verde Éxito
+                element.classList.add('success');
+                element.innerHTML = '<div style="font-size: 30px; margin-bottom: 10px;">✅</div><h3 style="margin: 0; font-size: 16px;">Verificado</h3><p style="margin: 5px 0 0 0; font-size: 13px;">Información validada</p>';
+                
+                validations++;
+                if(validations === 2) {
+                    const btn = document.getElementById('btn-final');
+                    btn.style.opacity = '1';
+                    btn.style.pointerEvents = 'auto';
+                    btn.classList.remove('btn-primary');
+                    btn.classList.add('btn-success');
+                    btn.innerText = 'Activar mi Escudo Verde';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
