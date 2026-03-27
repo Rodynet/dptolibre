@@ -3,529 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blindato - Ecosistema Integral</title>
-    <!-- Tailwind CSS para Estilos -->
+    <title>BLINDATO | Real Estate OS</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons (React Version) -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- React & ReactDOM -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <!-- Babel para JSX en el navegador -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        .mobile-frame {
-            width: 375px;
-            height: 812px;
-            border: 12px solid #0f172a;
-            border-radius: 40px;
-            overflow: hidden;
-            position: relative;
-            background: #f1f5f9;
-            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.25);
-        }
-        .notch {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 150px;
-            height: 25px;
-            background: #0f172a;
-            border-bottom-left-radius: 15px;
-            border-bottom-right-radius: 15px;
-            z-index: 100;
-        }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        body { font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
+        .score-badge { transition: transform 0.2s; }
+        .score-badge:hover { transform: scale(1.1); }
     </style>
 </head>
-<body>
-    <div id="root"></div>
-
-    <script type="text/babel">
-        const { useState, useEffect } = React;
-        const { 
-            ShieldCheck, TrendingUp, Award, Building2, Building, Users, FileText, Wallet, Gift, 
-            Bell, Plus, Search, LayoutDashboard, Settings, CheckCircle2, Clock, AlertCircle, 
-            X, ChevronRight, ArrowRight, Camera, Zap, MessageSquare, Gavel, Share2, 
-            PlusCircle, Download, Eye, Sparkles, Droplets, Flame, Landmark, Banknote
-        } = lucide;
-
-        // --- COMPONENTES UI COMUNES RM---
-
-        const Icon = ({ name, ...props }) => {
-            const LucideIcon = lucide[name];
-            return LucideIcon ? <LucideIcon {...props} /> : null;
-        };
-
-        const Gauge = ({ value, label }) => {
-            const color = value > 90 ? 'text-emerald-500' : value > 70 ? 'text-amber-500' : 'text-red-500';
-            return (
-                <div className="relative w-32 h-32 flex items-center justify-center">
-                    <svg className="w-full h-full transform -rotate-90">
-                        <circle cx="50%" cy="50%" r="45%" strokeWidth="8" fill="transparent" className="text-slate-100" stroke="currentColor" />
-                        <circle cx="50%" cy="50%" r="45%" strokeWidth="8" fill="transparent" strokeDasharray="251" strokeDashoffset={251 - (251 * value) / 100} className={color} stroke="currentColor" style={{ strokeLinecap: 'round' }} />
-                    </svg>
-                    <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <span className="text-2xl font-black text-slate-800">{value}%</span>
-                        <span className="text-[8px] font-black uppercase text-slate-400">{label}</span>
-                    </div>
+<body class="bg-slate-50 p-4 md:p-12">
+    <div class="max-w-5xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
+            <div>
+                <h1 class="text-4xl font-black tracking-tighter text-slate-900 uppercase italic">Blindato</h1>
+                <p class="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em]">
+                    Real Estate OS | <span class="text-emerald-600">Infoexperto Engine v1.1</span>
+                </p>
+            </div>
+            <div class="flex gap-3">
+                <div class="bg-white border border-slate-200 px-4 py-2 rounded-xl shadow-sm text-[10px] font-black uppercase">
+                    UVC Meta: 3.3
                 </div>
-            );
-        };
+                <button class="bg-slate-900 text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase shadow-xl hover:bg-slate-800 transition-all active:scale-95">
+                    Nuevo Legajo
+                </button>
+            </div>
+        </div>
 
-        // --- APP PRINCIPAL ---
-
-        function BlindatoApp() {
-            const [profile, setProfile] = useState('admin'); // 'admin', 'tenant', 'owner'
-            const [view, setView] = useState('home');
-            const [activeWizard, setActiveWizard] = useState(null);
-
-            // Perfil Administrador (Web)
-            const AdminView = () => (
-                <div className="flex h-screen w-full overflow-hidden animate-in fade-in duration-500">
-                    {/* Sidebar */}
-                    <aside className="w-72 bg-slate-900 text-white flex flex-col p-6 border-r border-slate-800">
-                        <div className="flex items-center gap-3 mb-12 px-2">
-                            <div className="w-10 h-10 bg-indigo-500 rounded-xl flex items-center justify-center text-white font-black text-xl">B</div>
-                            <div>
-                                <h1 className="font-black tracking-tighter text-xl leading-none">BLINDATO</h1>
-                                <p className="text-[9px] text-indigo-400 font-black uppercase tracking-widest mt-1">Real Estate OS</p>
-                            </div>
-                        </div>
-                        <nav className="flex-1 space-y-2">
-                            {['Dashboard', 'Inquilinos', 'Dueños', 'Propiedades', 'Tesorería', 'Tickets'].map(item => (
-                                <button key={item} className="w-full flex items-center gap-3 p-4 rounded-xl font-bold text-slate-400 hover:bg-slate-800 hover:text-white transition-all">
-                                    <Icon name={item === 'Dashboard' ? 'LayoutDashboard' : item === 'Tesorería' ? 'Wallet' : item === 'Inquilinos' ? 'Users' : item === 'Dueños' ? 'ShieldCheck' : item === 'Propiedades' ? 'Building2' : 'MessageSquare'} size={20} />
-                                    <span>{item}</span>
+        <div class="bg-white rounded-3xl border border-slate-200 shadow-2xl overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50/50 border-b border-slate-100">
+                            <th class="p-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Propiedad / Dueño</th>
+                            <th class="p-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Score IX</th>
+                            <th class="p-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Estado Operativo</th>
+                            <th class="p-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        <tr class="hover:bg-slate-50/80 transition-colors">
+                            <td class="p-5">
+                                <div class="font-bold text-slate-800 text-sm">Av. Colón 1200</div>
+                                <div class="text-[10px] text-slate-400 font-bold uppercase">Martínez Rodrigo</div>
+                            </td>
+                            <td class="p-5 text-center">
+                                <span class="score-badge inline-block bg-emerald-50 text-emerald-600 font-black px-3 py-1 rounded-lg border border-emerald-100 shadow-sm">
+                                    84
+                                </span>
+                            </td>
+                            <td class="p-5">
+                                <span class="bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-full text-[9px] font-black uppercase border border-indigo-100 tracking-tighter">
+                                    En Firma Digital
+                                </span>
+                            </td>
+                            <td class="p-5 text-right">
+                                <button class="p-2 hover:bg-white hover:shadow-md rounded-full transition-all">
+                                    <i data-lucide="external-link" class="w-4 h-4 text-slate-400"></i>
                                 </button>
-                            ))}
-                        </nav>
-                        <div className="mt-auto p-4 bg-slate-800/50 rounded-2xl border border-slate-700">
-                            <div className="flex items-center gap-3">
-                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Admin" className="w-10 h-10 rounded-full bg-slate-700" alt="Admin" />
-                                <div>
-                                    <p className="text-xs font-bold">Inmobiliaria Raíces</p>
-                                    <p className="text-[9px] text-indigo-400 font-black uppercase">Administrador</p>
-                                </div>
-                            </div>
-                        </div>
-                    </aside>
-
-                    {/* Main Content */}
-                    <main className="flex-1 flex flex-col overflow-hidden bg-slate-50">
-                        <header className="bg-white border-b border-slate-100 p-6 flex justify-between items-center shadow-sm">
-                            <div className="flex items-center gap-4">
-                                <button className="bg-indigo-600 text-white px-6 py-3 rounded-2xl font-black text-xs flex items-center gap-2 hover:bg-indigo-700 shadow-lg shadow-indigo-200">
-                                    <Plus size={18} /> NUEVA PROPIEDAD
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-slate-50/80 transition-colors">
+                            <td class="p-5">
+                                <div class="font-bold text-slate-800 text-sm">Bv. Chacabuco 450</div>
+                                <div class="text-[10px] text-slate-400 font-bold uppercase">Inversiones CBA</div>
+                            </td>
+                            <td class="p-5 text-center">
+                                <span class="score-badge inline-block bg-emerald-50 text-emerald-600 font-black px-3 py-1 rounded-lg border border-emerald-100 shadow-sm">
+                                    92
+                                </span>
+                            </td>
+                            <td class="p-5">
+                                <span class="bg-amber-50 text-amber-600 px-3 py-1.5 rounded-full text-[9px] font-black uppercase border border-amber-100 tracking-tighter">
+                                    Validando Legajo
+                                </span>
+                            </td>
+                            <td class="p-5 text-right">
+                                <button class="p-2 hover:bg-white hover:shadow-md rounded-full transition-all text-slate-400">
+                                    <i data-lucide="eye" class="w-4 h-4"></i>
                                 </button>
-                                <div className="h-8 w-[1px] bg-slate-100 mx-2"></div>
-                                <div className="flex items-center gap-2">
-                                    <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
-                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Torre de Control Activa</span>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-4">
-                                <div className="relative">
-                                    <Search className="absolute left-3 top-2.5 text-slate-300" size={16} />
-                                    <input type="text" placeholder="Buscar expediente..." className="pl-10 pr-4 py-2 bg-slate-50 border-none rounded-xl text-sm w-64" />
-                                </div>
-                                <Bell className="text-slate-400" size={22} />
-                            </div>
-                        </header>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-                        <div className="flex-1 overflow-y-auto p-8 space-y-10">
-                            {/* Dashboard KPIs */}
-                            <section className="grid grid-cols-4 gap-6">
-                                <div className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col items-center">
-                                    <Gauge value={94} label="Salud Negocio" />
-                                </div>
-                                <div className="bg-slate-900 p-6 rounded-[2.5rem] text-white flex flex-col justify-between shadow-xl">
-                                    <p className="text-[10px] font-black uppercase opacity-50 tracking-widest">Recaudación Total</p>
-                                    <h3 className="text-2xl font-black">$12.540.800</h3>
-                                    <div className="flex items-center gap-2 text-emerald-400 text-[10px] font-bold">
-                                        <TrendingUp size={14} /> +$12.4k Intereses Hoy
-                                    </div>
-                                </div>
-                                <div className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col justify-between">
-                                    <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Honorarios Listos</p>
-                                    <h3 className="text-2xl font-black text-indigo-600">$840.500</h3>
-                                    <button className="text-[10px] font-black bg-indigo-50 text-indigo-600 py-2 rounded-xl uppercase">Invertir Saldo</button>
-                                </div>
-                                <div className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col justify-between">
-                                    <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Liquidaciones</p>
-                                    <h3 className="text-2xl font-black">14 Dueños</h3>
-                                    <button className="bg-slate-900 text-white py-2 rounded-xl text-[10px] font-black uppercase">Pagar Todo</button>
-                                </div>
-                            </section>
+        <div class="mt-8 flex justify-between items-center px-4">
+            <div class="flex items-center gap-2 text-slate-400">
+                <i data-lucide="shield-check" class="w-4 h-4"></i>
+                <span class="text-[9px] font-bold uppercase tracking-widest tracking-tighter">Sistema Blindado & Protegido</span>
+            </div>
+            <div class="text-[9px] font-bold text-slate-300 uppercase">Score RM: 95% Accierto</div>
+        </div>
+    </div>
 
-                            {/* Valla de Atención - El Juez */}
-                            <section className="space-y-6">
-                                <div>
-                                    <h2 className="text-2xl font-black text-slate-800 uppercase tracking-tighter">Veredictos Pendientes</h2>
-                                    <p className="text-slate-400 text-sm font-medium italic">Acción única para destrabar la operación.</p>
-                                </div>
-                                <div className="grid grid-cols-1 gap-4">
-                                    <div className="bg-white p-6 rounded-[2rem] border-l-[12px] border-emerald-500 border-y border-r border-slate-100 flex items-center justify-between shadow-sm hover:shadow-md transition-all group">
-                                        <div className="flex items-center gap-6">
-                                            <div className="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600"><ShieldCheck size={28}/></div>
-                                            <div>
-                                                <h4 className="font-black text-slate-800">Legajo Verificado: Juan Pérez</h4>
-                                                <p className="text-sm text-slate-500">IA confirma solvencia 3.2x. Inquilino y Garantes ya firmaron.</p>
-                                            </div>
-                                        </div>
-                                        <button className="bg-slate-900 text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest group-hover:bg-indigo-600 transition-all shadow-xl shadow-slate-200">DAR OK FINAL</button>
-                                    </div>
-                                    <div className="bg-white p-6 rounded-[2rem] border-l-[12px] border-amber-500 border-y border-r border-slate-100 flex items-center justify-between shadow-sm group">
-                                        <div className="flex items-center gap-6">
-                                            <div className="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-600"><MessageSquare size={28}/></div>
-                                            <div>
-                                                <h4 className="font-black text-slate-800">Dueño no autoriza arreglo</h4>
-                                                <p className="text-sm text-slate-500">Presupuesto de $15.000 pendiente hace 48hs en Caseros 1230.</p>
-                                            </div>
-                                        </div>
-                                        <button className="bg-amber-500 text-white px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-amber-100">PUSH URGENCIA LEGAL</button>
-                                    </div>
-                                </div>
-                            </section>
-                        </div>
-                    </main>
-                </div>
-            );
-
-            // Perfil Inquilino (App Mobile)
-            const TenantView = () => (
-                <div className="flex flex-col h-full animate-in slide-in-from-right duration-500">
-                    <header className="bg-white px-6 pt-12 pb-6 flex justify-between items-center border-b border-slate-50 shadow-sm z-10">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full border-2 border-indigo-500 overflow-hidden bg-slate-100">
-                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Juan" alt="User" />
-                            </div>
-                            <div className="flex flex-col">
-                                <span className="text-xs font-black text-slate-800 leading-none">Juan Pérez</span>
-                                <span className="text-[9px] font-black text-indigo-600 uppercase mt-1">Inquilino Platinum</span>
-                            </div>
-                        </div>
-                        <ShieldCheck className="text-emerald-500" size={24} />
-                    </header>
-
-                    <main className="flex-1 overflow-y-auto pb-24 p-5 space-y-6">
-                        {/* Score and Miles */}
-                        <div className="flex justify-around items-center bg-white p-6 rounded-[2.5rem] shadow-sm border border-slate-100">
-                            <div className="text-center">
-                                <div className="w-16 h-16 rounded-full border-4 border-emerald-500 flex items-center justify-center text-emerald-600 font-black">820</div>
-                                <span className="text-[8px] font-black text-slate-400 uppercase mt-2 block">Score</span>
-                            </div>
-                            <div className="w-[1px] h-10 bg-slate-100"></div>
-                            <div className="text-center">
-                                <div className="w-16 h-16 rounded-full border-4 border-amber-400 flex items-center justify-center text-amber-600 font-black">4.5k</div>
-                                <span className="text-[8px] font-black text-slate-400 uppercase mt-2 block">Millas</span>
-                            </div>
-                        </div>
-
-                        {/* Wallet Banner */}
-                        <div className="bg-slate-900 rounded-[2.5rem] p-6 text-white shadow-2xl relative overflow-hidden active:scale-95 transition-transform" onClick={() => setActiveWizard('wallet')}>
-                            <ShieldCheck size={100} className="absolute right-[-20px] bottom-[-20px] text-white/5" />
-                            <div className="flex justify-between items-start mb-6">
-                                <div>
-                                    <p className="text-[10px] font-black uppercase text-indigo-400 tracking-widest">Saldo Galicia (Asociada)</p>
-                                    <h3 className="text-2xl font-black">$185.200</h3>
-                                </div>
-                                <button className="bg-indigo-600 p-2 rounded-xl shadow-lg"><Plus size={16} /></button>
-                            </div>
-                            <div className="bg-white/10 p-3 rounded-2xl flex items-center justify-between border border-white/5 backdrop-blur-md">
-                                <span className="text-[9px] font-black uppercase opacity-60">Alquiler Blindado</span>
-                                <span className="text-xs font-black text-emerald-400">+$405.430,22</span>
-                            </div>
-                        </div>
-
-                        {/* Cards Section */}
-                        <div className="space-y-4">
-                            <div className="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex justify-between items-center">
-                                <div>
-                                    <span className="text-[9px] font-black bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full uppercase">Faltan 4 días</span>
-                                    <h4 className="font-black text-slate-800 mt-2 text-sm">Caseros 1230, 4B</h4>
-                                    <p className="text-xl font-black text-slate-600 mt-1">$450.000</p>
-                                </div>
-                                <button className="bg-slate-900 text-white text-[10px] font-black px-6 py-3 rounded-xl uppercase tracking-widest shadow-xl shadow-slate-200">PAGAR</button>
-                            </div>
-
-                            <div className="bg-indigo-600 p-6 rounded-[2.5rem] text-white shadow-xl relative overflow-hidden" onClick={() => setActiveWizard('blinding')}>
-                                <Zap className="absolute right-[-10px] top-[-10px] text-white/10" size={80} />
-                                <h4 className="text-[10px] font-black uppercase tracking-widest opacity-80 mb-4 tracking-widest">Misión: Blindar Mayo</h4>
-                                <div className="flex justify-between text-[10px] font-black mb-2 uppercase">
-                                    <span>Progreso de Resguardo</span>
-                                    <span>45%</span>
-                                </div>
-                                <div className="h-2.5 bg-white/20 rounded-full overflow-hidden mb-4">
-                                    <div className="h-full bg-emerald-400" style={{width: '45%'}}></div>
-                                </div>
-                                <button className="w-full bg-white text-indigo-600 font-black py-3 rounded-2xl text-[10px] uppercase tracking-widest">+ Ingresar Fondos</button>
-                            </div>
-
-                            {/* Bitácora / Property Log */}
-                            <div className="bg-white p-5 rounded-3xl border border-slate-100 flex items-center gap-4 cursor-pointer" onClick={() => setActiveWizard('inventory')}>
-                                <div className="w-12 h-12 bg-slate-50 text-slate-400 rounded-xl flex items-center justify-center">
-                                    <Camera size={24}/>
-                                </div>
-                                <div>
-                                    <h4 className="text-xs font-black text-slate-800 uppercase">Bitácora de Estado</h4>
-                                    <p className="text-[9px] text-indigo-500 font-black uppercase">Última actualización: 10 Mar</p>
-                                </div>
-                                <ChevronRight className="ml-auto text-slate-200" />
-                            </div>
-                        </div>
-                    </main>
-
-                    {/* Bottom Nav */}
-                    <nav className="absolute bottom-0 w-full bg-white px-6 py-5 flex justify-around items-center border-t border-slate-100 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
-                        <Home size={22} className="text-indigo-600" />
-                        <FileText size={22} className="text-slate-300" />
-                        <Wallet size={22} className="text-slate-300" />
-                        <Gift size={22} className="text-slate-300" />
-                    </nav>
-                </div>
-            );
-
-            // Perfil Propietario (App Mobile)
-            const OwnerView = () => (
-                <div className="flex flex-col h-full animate-in slide-in-from-left duration-500">
-                    <header className="bg-slate-900 px-6 pt-12 pb-8 rounded-b-[3rem] shadow-xl text-white">
-                        <div className="flex justify-between items-center mb-8">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full border-2 border-emerald-500 overflow-hidden bg-slate-700">
-                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Roberto" alt="Owner" />
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="text-xs font-black leading-none">Roberto Daer</span>
-                                    <span className="text-[9px] font-black text-emerald-400 uppercase mt-1">Dueño Platinum</span>
-                                </div>
-                            </div>
-                            <Bell size={20} className="text-slate-500" />
-                        </div>
-                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Saldo Liquidado para Retiro</p>
-                        <h2 className="text-4xl font-black text-white">$760.400</h2>
-                        <button className="mt-6 w-full bg-emerald-500 text-slate-900 font-black py-4 rounded-2xl text-[10px] uppercase tracking-widest shadow-lg shadow-emerald-500/20">RETIRAR A MI ALIAS</button>
-                    </header>
-
-                    <main className="flex-1 overflow-y-auto pb-24 p-6 space-y-6">
-                        <div className="flex justify-between items-center">
-                            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Mis Activos</h3>
-                            <span className="text-[10px] font-black text-indigo-600 uppercase">Ver todos</span>
-                        </div>
-
-                        {/* Property Card Anti-Panic */}
-                        <div className="bg-white p-5 rounded-[2.5rem] shadow-sm border border-slate-100 flex items-center justify-between group">
-                            <div className="flex items-center gap-4">
-                                <div className="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-500 border border-emerald-100">
-                                    <ShieldCheck size={32} />
-                                </div>
-                                <div>
-                                    <h4 className="font-black text-slate-800 text-sm">Caseros 1230, 4B</h4>
-                                    <p className="text-[10px] text-slate-400 font-bold uppercase">Inquilino: Juan Pérez</p>
-                                </div>
-                            </div>
-                            <div className="text-right">
-                                <span className="text-[8px] font-black bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full uppercase">Blindado</span>
-                                <p className="text-sm font-black text-slate-800 mt-1">$450.000</p>
-                            </div>
-                        </div>
-
-                        {/* Dashboard Rendimiento Dueño */}
-                        <div className="bg-indigo-50 border border-indigo-100 p-6 rounded-[2.5rem] relative overflow-hidden">
-                            <TrendingUp className="absolute right-[-10px] top-[-10px] text-indigo-200 opacity-20" size={100} />
-                            <h4 className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-4">Rendimiento en Clearing</h4>
-                            <div className="flex items-end gap-2">
-                                <span className="text-2xl font-black text-indigo-900">+$12.450</span>
-                                <span className="text-[9px] font-bold text-indigo-500 mb-1">INTERESES MES</span>
-                            </div>
-                            <p className="text-[9px] text-indigo-600 font-medium mt-2">Tu dinero trabaja mientras Blindato orquesta el pago.</p>
-                        </div>
-                    </main>
-                    
-                    <nav className="absolute bottom-0 w-full bg-white px-6 py-5 flex justify-around items-center border-t border-slate-100 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
-                        <Building2 size={22} className="text-emerald-600" />
-                        <Clock size={22} className="text-slate-300" />
-                        <Wallet size={22} className="text-slate-300" />
-                        <Settings size={22} className="text-slate-300" />
-                    </nav>
-                </div>
-            );
-
-            // --- WIZARDS (MODALS) ---
-
-            const WizardOverlay = ({ children, title, onClose }) => (
-                <div className="absolute inset-0 bg-white z-[200] flex flex-col animate-in slide-in-from-bottom duration-300">
-                    <header className="p-6 border-b border-slate-100 flex justify-between items-center">
-                        <h3 className="font-black text-slate-800 uppercase text-xs tracking-widest">{title}</h3>
-                        <button onClick={onClose} className="p-2 bg-slate-100 rounded-full text-slate-400"><X size={20}/></button>
-                    </header>
-                    <div className="flex-1 overflow-y-auto">
-                        {children}
-                    </div>
-                </div>
-            );
-
-            return (
-                <div className="min-h-screen bg-slate-200 flex flex-col items-center justify-center p-10 overflow-hidden relative">
-                    
-                    {/* Perfil Switcher (Utility) */}
-                    <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[500] bg-white/80 backdrop-blur-md p-1.5 rounded-full shadow-2xl flex gap-1 border border-white">
-                        <button onClick={() => setProfile('admin')} className={`px-6 py-2 rounded-full text-[10px] font-black uppercase transition-all ${profile === 'admin' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-400'}`}>Admin Web</button>
-                        <button onClick={() => setProfile('tenant')} className={`px-6 py-2 rounded-full text-[10px] font-black uppercase transition-all ${profile === 'tenant' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-400'}`}>Inquilino App</button>
-                        <button onClick={() => setProfile('owner')} className={`px-6 py-2 rounded-full text-[10px] font-black uppercase transition-all ${profile === 'owner' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-400'}`}>Dueño App</button>
-                    </div>
-
-                    {profile === 'admin' ? (
-                        <div className="w-full h-full max-w-[1400px] max-h-[900px] bg-white rounded-[3rem] shadow-2xl overflow-hidden relative border border-slate-100">
-                            <AdminView />
-                            {activeWizard === 'verdict' && (
-                                <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md z-[300] flex items-center justify-center">
-                                    <div className="bg-white w-[800px] rounded-[3rem] overflow-hidden shadow-2xl animate-in zoom-in-95">
-                                        <header className="p-10 bg-slate-900 text-white flex justify-between items-center">
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center"><Zap size={32}/></div>
-                                                <div>
-                                                    <p className="text-[10px] font-black uppercase text-indigo-400">Veredicto Secretaría Digital</p>
-                                                    <h2 className="text-3xl font-black">Apto con Seguro</h2>
-                                                </div>
-                                            </div>
-                                            <button onClick={() => setActiveWizard(null)} className="p-2 bg-white/10 rounded-full"><X size={24}/></button>
-                                        </header>
-                                        <div className="p-12 space-y-10">
-                                            <div className="bg-indigo-50 p-8 rounded-[2.5rem] border border-indigo-100 flex justify-between items-center">
-                                                <div>
-                                                    <h4 className="text-[10px] font-black text-indigo-400 uppercase mb-2">Ratio de Solvencia</h4>
-                                                    <p className="text-4xl font-black text-indigo-900">3.2x <span className="text-sm font-bold text-indigo-400">Excelente</span></p>
-                                                </div>
-                                                <div className="text-right">
-                                                    <p className="text-[10px] font-black text-slate-400 uppercase mb-2">Score Infoexperto</p>
-                                                    <p className="text-4xl font-black text-emerald-600">890</p>
-                                                </div>
-                                            </div>
-                                            <div className="bg-emerald-50 p-10 rounded-[2.5rem] border border-emerald-100 flex items-center justify-between">
-                                                <div className="flex-1">
-                                                    <h4 className="font-black text-emerald-900 text-xl mb-2 uppercase">Máquina de Ventas Activa</h4>
-                                                    <p className="text-emerald-700 text-sm font-medium">Inquilino sin aval propietario. Ofrece Garantía Blindato para cerrar hoy mismo y sumar <strong>+$15.000 Markup</strong>.</p>
-                                                </div>
-                                                <button className="ml-8 bg-emerald-500 text-slate-900 font-black px-10 py-5 rounded-2xl text-xs uppercase tracking-widest shadow-xl">VENDER GARANTÍA</button>
-                                            </div>
-                                            <div className="flex gap-6">
-                                                <button className="flex-1 bg-slate-900 text-white font-black py-5 rounded-2xl text-xs uppercase tracking-widest">DAR OK FINAL Y FIRMAR</button>
-                                                <button className="bg-slate-100 text-slate-400 font-black px-10 py-5 rounded-2xl text-xs uppercase">RECHAZAR</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    ) : (
-                        <div className="mobile-frame">
-                            <div className="notch"></div>
-                            {profile === 'tenant' ? <TenantView /> : <OwnerView />}
-                            
-                            {/* Mobile Wizards */}
-                            {activeWizard === 'wallet' && (
-                                <WizardOverlay title="Mi Billetera" onClose={() => setActiveWizard(null)}>
-                                    <div className="p-8 space-y-10">
-                                        <div className="bg-slate-900 rounded-[2.5rem] p-10 text-white text-center relative overflow-hidden shadow-2xl">
-                                            <ShieldCheck size={48} className="text-emerald-400 mx-auto mb-4" />
-                                            <p className="text-xs font-black uppercase opacity-60">Fondo resguardado</p>
-                                            <h2 className="text-4xl font-black mt-2">$410.860,22</h2>
-                                            <div className="inline-flex items-center gap-1 bg-emerald-500/20 text-emerald-400 px-4 py-1.5 rounded-full text-[10px] font-black mt-6">
-                                                <TrendingUp size={12} /> +$5.430 RENDIMIENTO HOY
-                                            </div>
-                                        </div>
-                                        <div className="space-y-4">
-                                            <button className="w-full bg-indigo-600 text-white font-black py-5 rounded-2xl text-xs uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl">PAGAR ALQUILER <ArrowRight size={18}/></button>
-                                            <button className="w-full bg-white border border-slate-200 text-slate-800 font-black py-5 rounded-2xl text-xs uppercase tracking-widest flex items-center justify-center gap-3">PAGAR SERVICIOS <Zap size={18}/></button>
-                                            <button className="w-full text-slate-400 font-black py-3 text-[10px] uppercase">Retirar a mi Banco</button>
-                                        </div>
-                                    </div>
-                                </WizardOverlay>
-                            )}
-
-                            {activeWizard === 'blinding' && (
-                                <WizardOverlay title="Mago de Blindaje" onClose={() => setActiveWizard(null)}>
-                                    <div className="p-8 space-y-8 flex flex-col justify-center h-full text-center">
-                                        <div>
-                                            <p className="text-indigo-600 font-black text-[10px] uppercase tracking-widest mb-4">¿Cuánto quieres resguardar?</p>
-                                            <h2 className="text-5xl font-black text-slate-800">$450.000</h2>
-                                            <p className="text-slate-400 text-xs mt-4">Equivale a tu próximo mes de alquiler</p>
-                                        </div>
-                                        <div className="bg-white p-6 rounded-[2rem] border-2 border-indigo-100 flex items-center justify-between text-left">
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center"><Building size={24}/></div>
-                                                <div>
-                                                    <p className="text-[10px] font-black text-slate-400 uppercase">Desde mi banco</p>
-                                                    <p className="text-sm font-bold text-slate-800 tracking-tight">Banco Galicia (*** 8901)</p>
-                                                </div>
-                                            </div>
-                                            <ChevronRight className="text-indigo-600" />
-                                        </div>
-                                        <div className="bg-indigo-900 text-white p-6 rounded-[2rem] text-left relative overflow-hidden shadow-xl">
-                                            <Sparkles className="absolute right-[-10px] top-[-10px] opacity-20" size={80}/>
-                                            <h4 className="font-black text-xs uppercase mb-4 opacity-70">Beneficios Inmediatos</h4>
-                                            <div className="space-y-3">
-                                                <div className="flex items-center gap-2 text-xs font-bold"><CheckCircle2 size={16} className="text-emerald-400" /> +$5.400 Interés Mensual</div>
-                                                <div className="flex items-center gap-2 text-xs font-bold"><CheckCircle2 size={16} className="text-emerald-400" /> +25 Puntos Score</div>
-                                                <div className="flex items-center gap-2 text-xs font-bold"><CheckCircle2 size={16} className="text-emerald-400" /> +500 Millas Boutique</div>
-                                            </div>
-                                        </div>
-                                        <button onClick={() => setActiveWizard(null)} className="bg-indigo-600 text-white font-black py-5 rounded-[2rem] text-sm uppercase tracking-widest shadow-2xl">BLINDAR AHORA</button>
-                                    </div>
-                                </WizardOverlay>
-                            )}
-
-                            {activeWizard === 'inventory' && (
-                                <WizardOverlay title="Bitácora de Estado" onClose={() => setActiveWizard(null)}>
-                                    <div className="p-6 space-y-6">
-                                        <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm space-y-4">
-                                            <div className="relative aspect-video rounded-2xl overflow-hidden bg-slate-200">
-                                                <img src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=400" className="w-full h-full object-cover" />
-                                                <div className="absolute top-3 left-3 bg-black/50 backdrop-blur px-3 py-1 rounded-full text-[8px] font-black text-white uppercase flex items-center gap-1">
-                                                    <Clock size={10} /> 10/03/2026
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <h4 className="font-black text-slate-800 text-sm">Cocina - Grifería</h4>
-                                                <p className="text-[10px] text-slate-500 font-medium">Estado impecable. Sin goteos detectados por inquilino.</p>
-                                            </div>
-                                            <div className="flex items-center gap-2 text-emerald-600">
-                                                <ShieldCheck size={14}/>
-                                                <span className="text-[9px] font-black uppercase">Sello Inmutable Blindato</span>
-                                            </div>
-                                        </div>
-                                        <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm opacity-50 grayscale">
-                                            <div className="aspect-video rounded-2xl bg-slate-100 flex items-center justify-center text-slate-300">
-                                                <PlusCircle size={32}/>
-                                            </div>
-                                            <p className="text-center text-[10px] font-black text-slate-400 mt-4 uppercase">Cargar Nuevo Punto</p>
-                                        </div>
-                                    </div>
-                                </WizardOverlay>
-                            )}
-                        </div>
-                    )}
-
-                </div>
-            );
-        }
-
-        // Inicialización de la App
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<BlindatoApp />);
-
-        // Inicializar Lucide después del render
-        window.onload = () => {
-            lucide.createIcons();
-        };
+    <script>
+        // Inicialización de iconos con Lucide
+        lucide.createIcons();
     </script>
 </body>
 </html>
