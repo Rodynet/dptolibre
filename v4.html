@@ -24,6 +24,10 @@
         .logo-font { letter-spacing: -0.05em; font-weight: 800; }
         .success-pulse { animation: successPulse 2s infinite; }
         @keyframes successPulse { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+        
+        /* Colores Sociales */
+        .google-icon { color: #4285F4; }
+        .apple-icon { color: #000000; }
     </style>
 </head>
 <body>
@@ -55,6 +59,7 @@
             const [userRole, setUserRole] = useState(null);
             const [hasContract, setHasContract] = useState(false);
             const [isScanning, setIsScanning] = useState(false);
+            const [isFirstRental, setIsFirstRental] = useState(false);
 
             const handleNextVal = () => {
                 setIsScanning(true);
@@ -81,10 +86,17 @@
                     
                     <div className="space-y-4 w-full">
                         <button onClick={() => setView('role_selection')} className="w-full flex items-center justify-center gap-3 py-4 border-2 border-slate-100 rounded-2xl font-bold text-slate-700 hover:bg-slate-50 transition-colors">
-                            <Icon name="chrome" size={20} /> Continuar con Google
+                            {/* SVG de Google con colores originales */}
+                            <svg width="20" height="20" viewBox="0 0 24 24">
+                                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-1 .67-2.26 1.07-3.71 1.07-2.87 0-5.3-1.94-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                                <path d="M5.84 14.11c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.09H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.91l3.66-2.8z" fill="#FBBC05"/>
+                                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.09l3.66 2.8c.86-2.59 3.29-4.51 6.16-4.51z" fill="#EA4335"/>
+                            </svg>
+                            Continuar con Google
                         </button>
-                        <button onClick={() => setView('role_selection')} className="w-full flex items-center justify-center gap-3 py-4 border-2 border-slate-100 rounded-2xl font-bold text-slate-700 hover:bg-slate-50 transition-colors">
-                            <Icon name="apple" size={20} /> Continuar con Apple
+                        <button onClick={() => setView('role_selection')} className="w-full flex items-center justify-center gap-3 py-4 border-2 border-slate-100 bg-black rounded-2xl font-bold text-white hover:bg-zinc-800 transition-colors">
+                            <Icon name="apple" size={20} className="text-white fill-white" /> Continuar con Apple
                         </button>
                         
                         <div className="flex items-center gap-4 py-4">
@@ -106,9 +118,9 @@
             // --- SELECCIÓN DE ROL ---
             const RoleSelection = () => (
                 <div className="mobile-shell bg-white flex flex-col p-8 animate-in">
-                    <header className="mb-10 pt-10">
+                    <header className="mb-10 pt-10 text-center">
                         <h2 className="text-3xl font-black text-[#0D1B4B] tracking-tighter leading-none">¿Cómo vas a usar DptoLibre?</h2>
-                        <p className="text-slate-400 text-sm mt-3 font-medium">Elegí tu perfil para personalizar tu experiencia.</p>
+                        <p className="text-slate-400 text-sm mt-3 font-medium px-6">Elegí tu perfil para personalizar tu pasaporte.</p>
                     </header>
 
                     <div className="space-y-4 flex-1">
@@ -136,17 +148,17 @@
                 </div>
             );
 
-            // --- INVITACIÓN AL PASAPORTE ---
+            // --- INVITACIÓN AL PASAPORTE (OBLIGATORIA) ---
             const PassportInvite = () => (
                 <div className="mobile-shell passport-gradient flex flex-col justify-center items-center p-10 text-center text-white animate-in">
                     <Logo light size="lg" />
                     <h2 className="text-3xl font-black mt-10 uppercase tracking-tighter leading-none">Obtené tu Pasaporte</h2>
-                    <p className="text-white/60 text-sm mt-4 leading-relaxed px-4">Validá tu identidad y solvencia ahora para alquilar de forma inmediata y segura.</p>
+                    <p className="text-white/60 text-sm mt-4 leading-relaxed px-4">Para acceder a las funciones de DptoLibre, primero debés validar tu identidad y solvencia.</p>
                     
                     <div className="w-full mt-12 space-y-4">
                         <button onClick={() => setView('validation')} className="w-full bg-[#00D1FF] text-[#0D1B4B] py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-2xl">Empezar Validación</button>
-                        <button onClick={() => setView('home')} className="w-full bg-white/10 text-white py-5 rounded-2xl font-black text-xs uppercase tracking-widest border border-white/20">Hacerlo más tarde</button>
                     </div>
+                    <p className="mt-8 text-[10px] text-white/30 uppercase font-black tracking-[0.2em]">Validación obligatoria via Infoexperto</p>
                 </div>
             );
 
@@ -177,9 +189,32 @@
                         ) : (
                             <div className="flex-1 flex flex-col">
                                 {valStep === 1 && <div className="w-full aspect-[3/2] bg-slate-900 rounded-[2rem] relative border-4 border-[#0055DD]/20 flex items-center justify-center"><Icon name="camera" className="text-[#00D1FF] opacity-40" size={48} /></div>}
+                                {valStep === 2 && <div className="w-full aspect-[3/2] bg-slate-900 rounded-[2rem] relative border-4 border-[#0055DD]/20 flex items-center justify-center"><Icon name="camera" className="text-[#00D1FF] opacity-40" size={48} /></div>}
                                 {valStep === 3 && <div className="flex flex-col items-center space-y-6"><div className="face-guide bg-slate-100 shadow-inner"></div><p className="text-xs text-slate-500 font-bold uppercase">Parpadeá frente a la cámara</p></div>}
                                 {valStep === 4 && <div className="space-y-4">{[1,2,3].map(i=>(<div key={i} className="p-5 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-between"><Icon name="file-text" className="text-slate-300"/><button className="bg-slate-50 p-2 rounded-lg"><Icon name="plus" size={16}/></button></div>))}</div>}
-                                {valStep === 5 && <div className="space-y-4"><input type="text" placeholder="Último domicilio" className="w-full bg-slate-50 border-none p-5 rounded-2xl text-sm font-bold" /><input type="text" placeholder="Ref. Inmobiliaria" className="w-full bg-slate-50 border-none p-5 rounded-2xl text-sm font-bold" /></div>}
+                                {valStep === 5 && (
+                                    <div className="space-y-6">
+                                        <button 
+                                            onClick={() => setIsFirstRental(!isFirstRental)}
+                                            className={`w-full p-6 border-2 rounded-3xl flex items-center gap-4 transition-all ${isFirstRental ? 'border-emerald-500 bg-emerald-50' : 'border-slate-100 bg-slate-50'}`}
+                                        >
+                                            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${isFirstRental ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-400'}`}>
+                                                <Icon name="check" size={16} />
+                                            </div>
+                                            <div className="text-left">
+                                                <h4 className="font-black text-slate-800 text-sm uppercase">Es mi primer alquiler</h4>
+                                                <p className="text-[10px] text-slate-400 font-bold">No tengo historial previo en el sistema.</p>
+                                            </div>
+                                        </button>
+
+                                        {!isFirstRental && (
+                                            <div className="space-y-4 animate-in fade-in">
+                                                <input type="text" placeholder="Último domicilio alquilado" className="w-full bg-slate-50 border-none p-5 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-[#0055DD]" />
+                                                <input type="text" placeholder="Referencia Inmobiliaria / Dueño" className="w-full bg-slate-50 border-none p-5 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-[#0055DD]" />
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                                 <button onClick={handleNextVal} className="mt-auto w-full bg-[#0055DD] text-white py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl">Continuar</button>
                             </div>
                         )}
@@ -226,15 +261,19 @@
                                 <p className="text-[10px] font-bold opacity-60 uppercase mt-1">Capacidad Mensual Auditada</p>
                             </div>
 
-                            <div className="flex items-center justify-between bg-white/10 p-5 rounded-3xl backdrop-blur-md border border-white/10">
-                                <div className="flex flex-col gap-1">
-                                    <span className="text-[8px] font-black uppercase text-[#00D1FF]">Verificado por IA</span>
-                                    <button className="flex items-center gap-2 text-xs font-black uppercase tracking-widest hover:text-[#00D1FF] transition-colors">
-                                        <Icon name="share-2" size={16} /> Compartir Pasaporte
-                                    </button>
-                                </div>
-                                <div className="bg-white p-2 rounded-xl shadow-lg">
-                                    <Icon name="qr-code" size={32} className="text-[#0D1B4B]" />
+                            <div className="flex flex-col gap-3">
+                                <button className="w-full bg-white/10 hover:bg-white/20 transition-all p-4 rounded-2xl backdrop-blur-md border border-white/10 flex items-center justify-center gap-3 font-black text-xs uppercase tracking-widest">
+                                    <Icon name="share-2" size={16} className="text-[#00D1FF]" /> Compartir Pasaporte
+                                </button>
+                                
+                                <div className="flex items-center justify-between bg-white p-5 rounded-3xl shadow-lg">
+                                    <div className="flex flex-col">
+                                        <span className="text-[8px] font-black uppercase text-slate-400">Escaneo Rápido</span>
+                                        <span className="text-[10px] font-black text-[#0D1B4B] uppercase tracking-tighter mt-1">Validación Infoexperto</span>
+                                    </div>
+                                    <div className="bg-[#EEF3FF] p-2 rounded-xl">
+                                        <Icon name="qr-code" size={32} className="text-[#0D1B4B]" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
